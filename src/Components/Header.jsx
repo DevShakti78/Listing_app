@@ -1,6 +1,15 @@
-import React from 'react'
+import React,{useState} from 'react'
 
 const Header = () => {
+
+  
+  const data = localStorage.getItem("lists")
+ var dataUpdated = JSON.parse(data)
+ const toBePrinted = dataUpdated.splice(-1)
+//console.log(toBePrinted)
+const [value,setValue] = useState(toBePrinted)
+//console.log(value[0].fname)
+
   return (
     <>
     <nav class="navbar navbar-expand-lg bg-primary" >
@@ -23,8 +32,7 @@ const Header = () => {
         </li>
       </ul>
       <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-        <button class="btn btn-outline-success" type="submit">Search</button>
+        <h3>{value[0].fname}  {value[0].lname}</h3>
       </form>
     </div>
   </div>

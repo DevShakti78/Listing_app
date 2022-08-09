@@ -2,6 +2,7 @@ import React from 'react'
 import { useState,useEffect } from 'react'
 import '../App.css'
 import View from './View'
+import useToggle from './UseToggleState'
 
 const getDatafromLS=()=>{
     const data = localStorage.getItem('lists')
@@ -14,13 +15,14 @@ const getDatafromLS=()=>{
 }
 
 const List = () => {
+    const [isEditing,toogle] = useToggle(false)
 
 const [lists,setLists] = useState(getDatafromLS());
 
     const [fname,setFname] = useState("")
     const [lname,setLname] = useState("")
     const [age,setAge] = useState("")
-    const [status,setStatus] = useState('')
+    const [status,setStatus] = useState("")
 
    const handleSubmit=(e)=>{
 e.preventDefault()
@@ -31,9 +33,6 @@ let list = {
     status
 }
 setLists([...lists,list])
-setFname("")
-setLname("")
-setAge("")
    }
 
    const deleteList=(age)=>{
@@ -42,6 +41,11 @@ setAge("")
    })
    setLists(filterdName)
    }
+
+   const editlist=(age)=>{
+    
+    }
+
 
    useEffect(() => {
      localStorage.setItem("lists",JSON.stringify(lists));
@@ -60,12 +64,10 @@ setAge("")
 <input type="text" className='form-control' onChange={(e)=>setLname(e.target.value)} required ></input>
 <br />
 <label>Age</label>
-<input type="number" className='form-control' onChange={(e)=>setAge(e.target.value)} required ></input>
+<input type="number" className='form-control' onChange={(e)=>setAge(e.target.value)} required unique="true" ></input>
 <br />
-<label>active</label>
-<input class="form-check-input mt-0" type="checkbox" onChange={(e)=>setStatus(e.target.value)} value="active" aria-label="Checkbox for following text input"></input>
-<label>Inactive</label>
-<input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input"></input>
+<label>Status</label>
+<input class="form-check-input mt-0" type="checkbox" onChange={(e)=>setStatus(e.target.checked)} value="active" aria-label="Checkbox for following text input"></input>
 
 <br />
 <button type='submit' className='btn btn-success btn-md'>Submit</button>
@@ -73,7 +75,10 @@ setAge("")
 
  </form>
             </div>
+{isEditing? <h1>editing...</h1> : 
+
             <div className="view-container">
+
                 {lists.length>0 && <>
                 <div className="table-responsive">
 <div className="table">
@@ -87,7 +92,8 @@ setAge("")
     </thead>
 
     <tbody>
-        <View lists = {lists} deleteList={deleteList} />
+        <View lists = {lists} deleteList={deleteList} editlist={editlist}/>
+        
     </tbody>
 </div>
 
@@ -95,6 +101,8 @@ setAge("")
                 </>}
 {lists.length < 1 && <div>No data are added yet</div> }
             </div>
+            
+            }
         </div>
 
     </div>
