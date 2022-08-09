@@ -1,14 +1,55 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect,useReducer} from 'react'
 
 const Header = () => {
 
+  const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
+
+
   
-  const data = localStorage.getItem("lists")
- var dataUpdated = JSON.parse(data)
- const toBePrinted = dataUpdated.splice(-1)
+
+  const getDatafromLS=()=>{
+    const data = localStorage.getItem('lists')
+   
+    if(data){
+      //console.log("data",data)
+        return JSON.parse(data)
+    }
+   
+}
+const [lists,setLists] = useState([]);
+const [mylist,setMyList] = useState([]);
+//console.log(lists)
+
+//   const data = localStorage.getItem("lists")
+//  var dataUpdated = JSON.parse(data)
+
 //console.log(toBePrinted)
-const [value,setValue] = useState(toBePrinted)
-//console.log(value[0].fname)
+const [value,setValue] = useState([])
+
+useEffect(() => {
+  (async () => {
+    const mydata = await getDatafromLS()
+    console.log("mydata",mydata)
+    setLists([...mydata])
+    setMyList(mydata)
+    const toBePrinted = mydata.splice(-1)
+    console.log("toBePrinted",toBePrinted)
+    setValue(toBePrinted)
+    forceUpdate()
+
+  })();
+}, [ignored]);
+
+
+useEffect(() => {
+  // const mydata =  getDatafromLS()
+  // setLists(mydata)
+  console.log("myList",mylist)
+ 
+ }, [mylist])
+
+
+//console.log(value[0])
 
   return (
     <>
@@ -32,7 +73,12 @@ const [value,setValue] = useState(toBePrinted)
         </li>
       </ul>
       <form class="d-flex" role="search">
-        <h3>{value[0].fname}  {value[0].lname}</h3>
+       
+        {
+          lists.length>0?<h3>{value[0].fname} {value[0].lname}</h3>:<h3>no data</h3>
+
+        }
+      
       </form>
     </div>
   </div>
